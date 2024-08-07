@@ -1,0 +1,191 @@
+
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %} Blog Details {% endblock %}
+
+{% block content %}
+
+<div class="container mt-3">
+    <div class="row">
+        
+        <div class="col-12" style="background-color:darkslateblue;">
+          
+            <div class="card mb-3" style="background-color:gray;">
+                <div class="row">
+                    <div class="col-md-3">
+                        <img src="{{ selected_blog.image.url }}" alt="" class="img-fluid" 
+                             style="border-radius:50px; border:5px double brown; 
+                                    padding:10px; margin:20px; margin-left:3px;">
+                    </div>
+                        
+                    <div class="col-md-6" style="background-color:darkgrey; margin-top:80px; border-radius:20px;">
+                        <div class="card-body">
+                            <h3 class="card-title" 
+                                style="background-color:black; border-radius:10px; 
+                                       padding:5px; border-style: double; padding-left:180px; color:white;">
+                                {{ selected_blog.title|upper }}
+                            </h3>
+                            <p class="card-text">
+                                {{ selected_blog.description|safe }}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <video width="250" controls autoplay 
+                               style="border-radius:20px; margin-top:20px; 
+                                      border-style: dashed;">
+                            <source src="{{ selected_blog.video_file.url }}" type="audio/mp4">
+                        </video>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+
+        <p><strong style="background-color:pink;">Yorum Sayısı:<strong> {{ comment_count }}</p>
+        
+        <div class="col-12 mt-4">
+            <h4>Yorum Yap</h4>
+            <form method="POST">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-primary">Yorumu Gönder</button>
+            </form>
+        </div>
+
+        <div class="col-12 mt-4">
+            <h4>Yorumlar</h4>
+            {% if comments %}
+                <ul class="list-unstyled">
+                    {% include 'blog/comment_tree.html' with comments=comments %}
+                </ul>
+            {% else %}
+                <p>Henüz yorum yapılmamış.</p>
+            {% endif %}
+        </div>
+
+        <div class="col-12 mt-4">
+            
+            <h4>Yorumlar</h4>
+            
+            {% if selected_blog.yorumlar.all %}
+                
+                <ul class="list-unstyled">
+                    
+                    {% for comment in comments %}
+                        
+                        <li class="media mb-3">
+                            
+                            <div class="media-body">
+                                
+                                <p><h5 style="background-color:yellow;"><b>{{ comment.content }}</b></h5></p>
+                                
+                                <p class="text-muted">
+                                    Yazar: {{ comment.author }} | 
+                                    Oluşturulma Tarihi: {{ comment.created_at }} | 
+                                    Güncelleme Tarihi: {{ comment.updated_at }}<br>
+                                    
+                                    {% if comment.author == request.user %}
+                                        <a href="{% url 'yorum_düzenle' comment.id %}">Düzenle</a>
+                                    {% endif %}
+                                    
+                                    {% if comment.author == request.user or request.user.is_superuser %}
+                                        | <a href="{% url 'yorum_sil' comment.id %}" 
+                                            onclick="return confirm('Yorumu silmek istediğinizden emin misiniz ?');">Sil</a>
+                                    {% endif %} 
+
+                                            | Like: <span id="like-count-{{ comment.id }}">{{ comment.total_likes }}</span>
+                                            | Dislike: <span id="dislike-count-{{ comment.id }}">{{ comment.total_dislikes }}</span>
+                                            <a href="#" class="btn btn-success btn-sm" onclick="likeComment({{ comment.id }}); return false;">Like</a>
+                                            <a href="#" class="btn btn-danger btn-sm" onclick="dislikeComment({{ comment.id }}); return false;">Dislike</a>
+                                    
+                                    | <a href="#" onclick="showReplyForm({{ comment.id }}); return false;">Yanıtla</a>
+                                    
+                                    
+
+                                    <div id="reply-form-{{ comment.id }}" style="display:none;">
+                                                
+                                        <form method="POST" action="{% url 'blog_detayi' selected_blog.slug %}">
+                                                
+                                                {% csrf_token %}
+                                                
+                                                <input type="hidden" name="parent_id" value="{{ comment.id }}">
+                                                    
+                                                    {{ form.as_p }}
+                                                
+                                                <button type="submit" class="btn btn-primary">Yanıt Gönder</button>
+                                                
+                                        </form>
+                                    
+                                    </div>
+                                   
+                                </p>
+
+                                {% if comment.yanitlar.all %}
+                                    <ul class="list-unstyled ml-4">
+                                        {% for reply in comment.yanitlar.all %}
+                                            <li class="media mb-3">
+                                                <div class="media-body">
+                                                    <p><h3>{{ reply.content }}</h3></p>
+                                                    <p class="text-muted">
+                                                        Yazar: {{ reply.author }} | 
+                                                        Oluşturulma Tarihi: {{ reply.created_at }} | 
+                                                        Güncelleme Tarihi: {{ reply.updated_at }}<br>
+                                                    </p>
+                                                </div>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+                                
+                    
+                            </div>
+                        
+                        </li>
+                    
+                    {% endfor %}
+                
+                </ul>
+            
+            {% else %}
+                <p>Henüz yorum yapılmamış.</p>
+            {% endif %}
+        
+        </div>
+
+        <script>
+            
+            function likeComment(commentId) {
+                fetch(`/comment/like/${commentId}/`)
+                    .then(response => response.json())
+                    .then(data => {
+                        document.getElementById(`like-count-${commentId}`).textContent = data.toplam_begenme_sayisi;
+                        document.getElementById(`dislike-count-${commentId}`).textContent = data.toplam_begenmeme_sayisi;
+                    });
+            }
+            
+            
+            function dislikeComment(commentId) {
+                fetch(`/comment/dislike/${commentId}/`)
+                    .then(response => response.json())
+                    .then(data => {
+                        document.getElementById(`like-count-${commentId}`).textContent = data.toplam_begenme_sayisi;
+                        document.getElementById(`dislike-count-${commentId}`).textContent = data.toplam_begenmeme_sayisi;
+                    });
+            }
+
+            function showReplyForm(commentId) {
+                var form = document.getElementById('reply-form-' + commentId);
+                form.style.display = form.style.display === 'none' ? 'block' : 'none';
+            }
+        
+        </script>
+    
+    </div>
+
+</div>
+
+{% endblock %}
+

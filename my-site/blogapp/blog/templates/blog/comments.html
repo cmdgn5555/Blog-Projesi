@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %} Blog Details {% endblock %}
+
+{% block content %}
+
+
+<div class="comment">
+    <h2 style="background-color:pink; 
+                color:red; 
+                margin-bottom:10px; 
+                border:2px dotted brown; 
+                padding:5px; 
+                padding-left:10px;">
+                Yorumlar
+    </h2>
+    
+    <div style="background-color:gray;">
+        <h5>
+            <p>
+                <b>
+                    <span style="background-color:darkgray; 
+                    color:midnightblue; 
+                    border-radius:10px; 
+                    border:2px dashed brown; 
+                    padding:10px;
+                    padding-top:5px;">{{ selected_comment.title|title }}
+                    </span>
+                </b>
+            </p>
+        </h5>
+    </div>
+    
+    <div style="background-color:black; color:white; border-radius:5px; border:5px inset orange;">
+        {{ selected_comment.comments|title|urlize }}
+    </div>
+</div>
+
+{% endblock %}
+

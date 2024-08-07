@@ -1,0 +1,38 @@
+<nav class="navbar navbar-dark bg-primary navbar-expand-lg">
+    <div class="container">
+        <a class="navbar-brand" href="{% url 'ana' %}">Blogapp</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbar">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'ana' %}">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'bloglar' %}">Blogs</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav ms-auto">
+                
+                {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'cikis' %}" style="background-color:red; color:white; border:1px solid; border-radius:15px; margin-right:15px; border-style:outset;">Logout</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href=""style="background-color:blue; color:white; border:1px solid; border-radius:15px; margin-right:15px; border-style:outset;">Welcome, {{ user.get_full_name|title }}</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'giris' %}" 
+                        style="background-color:green; border:1px solid; border-radius:15px; margin-right:15px; border-style:outset;">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'kayit' %}" style="background-color:green; border:1px solid; border-radius:15px; border-style:outset;">Register</a>
+                    </li>
+                {% endif %}
+            
+            </ul>
+        </div>
+    </div>
+</nav>

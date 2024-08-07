@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block title %}Yorumu Düzenle{% endblock %}
+
+{% block content %}
+<div class="container mt-3 ms-2">
+    <h2>Yorumu Düzenle</h2>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Kaydet</button>
+    </form>
+</div>
+{% endblock %}

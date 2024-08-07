@@ -1,0 +1,48 @@
+
+{% extends 'base.html' %}
+
+{% load static %}
+    
+{% block css_files %}
+    <link rel="stylesheet" href="{% static 'account/css/index.css'%}">
+{% endblock %}
+
+{% block title %} Giriş Yap {% endblock %}
+
+{% block content %}
+
+<div class="container mt-3">
+    <div class="col">
+        <h1>Login</h1>
+        <hr>
+
+        <form  method="POST">
+            {% csrf_token %}
+            {% if error %}
+                <div class="alert alert-danger">
+                    {{ error }}
+                </div>
+            {% endif %}
+            
+            <div class="mb-3">
+                <label for="username" class="form-label"><strong>Username</strong></label>
+                <input type="text" class="form-control" name="username" placeholder="Lütfen kullanıcı adınızı yazınız...">
+            </div>
+
+            <div class="mb-3">
+                <label for="password" class="form-label"><strong>Password</strong></label>
+                <input type="password" class="form-control" name="password"  placeholder="Lütfen şifrenizi giriniz...">
+            </div>
+
+            <div class="mb-3"></div>
+
+            <input type="submit" value="Login" class="btn btn-primary">
+        <form>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block js_files %}
+    <script src="{% static 'account/js/script.js' %}"></script>
+{% endblock %}

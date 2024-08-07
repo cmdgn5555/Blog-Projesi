@@ -1,0 +1,33 @@
+{% load static %}
+
+
+<div class="card mb-3">
+    <div class="row">
+        <div class="col-md-3">
+            <img src="{{ blog.image.url }}" alt="" class="img-fluid" 
+                 style="border-radius:20px;  border:3px dotted blue; background-color:green; margin:10px;">
+        </div>
+        <div class="col-md-9">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <a href="{% url 'blog_detayi' blog.slug %}" style="margin-right:280px;">
+                        {{ blog.title|title }}
+                    </a>
+                    <a href="{% url 'yorum_detayi' blog.slug %}">
+                        Geçmiş Yorumlar
+                    </a>
+
+                </h5>
+                <p class="card-text">
+                    <p><strong>{{ time|date:"D d M Y H:i:s" }}</strong></p>
+                    <em>{{ blog.description|striptags|slice:"0:150"|title }}</em>
+                    <h6 style="background-color:yellow; color:black;">Görüntülenme Sayısı: {{ blog.view_count }}</h6>
+                </p>
+                
+                <p><b>Yayımlanma Zamanı:</b> {{ blog.created_at|timesince }} önce </p>
+                
+                <p><b>Son Kayıt İçin Kalan Zaman:</b> {{ blog.until_date|timeuntil }}</p>
+            </div>
+        </div>
+    </div>
+</div>

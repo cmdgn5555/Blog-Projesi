@@ -1,0 +1,34 @@
+
+{% extends 'base.html' %}
+
+{% block title %}Tüm Bloglar {% endblock %}
+
+{% block content %}
+
+<div class="container mt-3">
+    <div class="row">
+        <div class="col-3">
+
+            {% include 'partials/_categories.html' %}
+            
+        </div>
+        
+        <div class="col-9">
+            <h1>Tüm Bloglar</h1>
+            <hr>
+            {% if blogs|length > 0 %}
+                {% for blog in blogs %}
+                    {% if blog.is_active %}
+                        {% include 'blog/partials/_blog.html' %}
+                    {% endif %}
+                {% endfor %}
+            {% else %}
+                <div class="alert alert-warning">Bu Kategori için Kurs Bulunamadı</div>
+               
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+

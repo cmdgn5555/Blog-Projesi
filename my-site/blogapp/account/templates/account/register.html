@@ -1,0 +1,70 @@
+
+{% extends 'base.html' %}
+
+{% load static %}
+    
+{% block css_files %}
+    <link rel="stylesheet" href="{% static 'account/css/index.css'%}">
+{% endblock %}
+
+{% block title %} Kaydol {% endblock %}
+
+{% block content %}
+
+<div class="container mt-3">
+    <div class="col">
+        <h1>Register</h1>
+        <hr>
+
+        <form  method="POST">
+            
+            {% csrf_token %}
+            {% if error %}
+                <div class="alert alert-danger">
+                    {{ error }}
+                </div>
+            {% endif %}
+            
+            <div class="mb-3">
+                <label for="username" class="form-label"><strong>Username</strong></label>
+                <input type="text" class="form-control" name="username" required placeholder="Lütfen kullanıcı adınızı yazınız..." value={{ u_name }}>
+            </div>
+            
+            <div class="mb-3">
+                <label for="email" class="form-label"><strong>Email</strong></label>
+                <input type="email" class="form-control" name="email" required placeholder="Lütfen eposta adresinizi yazınız..." value={{ e_mail }}>
+            </div>
+            
+            <div class="row mb-3 g-3">
+                <div class="col">
+                    <label for="firstname" class="form-label"><strong>Firstname</strong></label>
+                    <input type="text" class="form-control" name="firstname" required placeholder="Lütfen adınızı yazınız..." value={{ f_name }}>
+                </div>
+                <div class="col">
+                    <label for="lastname" class="form-label"><strong>Lastname</strong></label>
+                    <input type="text" class="form-control" name="lastname" required placeholder="Lütfen soyadınızı yazınız..." value={{ l_name }}>
+                </div>
+            </div>
+            
+            <div class="row mb-3 g-3">
+                <div class="col">
+                    <label for="password" class="form-label"><strong>Password</strong></label>
+                    <input type="password" class="form-control" name="password" required placeholder="Lütfen şifrenizi yazınız..." value={{ pass }}>
+                </div>
+                <div class="col">
+                    <label for="repassword" class="form-label"><strong>Re-Password</strong></label>
+                    <input type="password" class="form-control" name="repassword" required placeholder="Lütfen şifrenizi tekrar yazınız..." value={{ repass }}>
+                </div>
+            </div>
+            
+            <input type="submit" value="Register" class="btn btn-primary">
+        
+        <form>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block js_files %}
+    <script src="{% static 'account/js/script.js' %}"></script>
+{% endblock %}

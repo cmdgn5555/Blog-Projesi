@@ -1,0 +1,31 @@
+
+{% for comment in comments %}
+    <li class="media mb-5">
+        <div class="media-body">
+            <p>{{ comment.content }}</p>
+            <p class="text-muted">
+                Yazar: {{ comment.author }} |
+                Oluşturulma Tarihi: {{ comment.created_at }} |
+                Güncelleme Tarihi: {{ comment.updated_at }}<br>
+            </p>
+            <a href="#" onclick="showReplyForm({{ comment.id }}); return false;">Yanıtla</a>
+            
+           
+            <div id="reply-form-{{ comment.id }}" style="display:none;">
+                <form method="POST" action="{% url 'blog_detayi' selected_blog.slug %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="parent_id" value="{{ comment.id }}">
+                    {{ form.as_p }}
+                    <button type="submit" class="btn btn-primary">Yanıt Gönder</button>
+                </form>
+            </div>
+            
+            
+            {% if comment.yanitlar.all %}
+                <ul class="list-unstyled ml-4">
+                    {% include 'blog/comment_tree.html' with comments=comment.yanitlar.all %}
+                </ul>
+            {% endif %}
+        </div>
+    </li>
+{% endfor %}
